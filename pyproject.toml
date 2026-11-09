@@ -1,0 +1,22 @@
+[project]
+name = "tarefa-python-sql"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "henriquesantiago-eng", email = "eng.henriquesantiago@gmail.com" }
+]
+requires-python = ">=3.15"
+dependencies = [
+    "faker>=40.52.0",
+    "jupyter>=1.1.1",
+    "jupyterlab>=4.6.6",
+    "notebook>=7.6.5",
+]
+
+[project.scripts]
+tarefa-python-sql = "tarefa_python_sql:main"
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14.0"]
+build-backend = "uv_build"
