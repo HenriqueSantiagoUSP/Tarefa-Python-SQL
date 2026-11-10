@@ -8,3 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Banco SQLite gerado pelo notebook e por python -m tarefa_python_sql
+*.db

@@ -1,11 +1,19 @@
+"""
+Conexão única com o SQLite (padrão Singleton): todos os DAOs compartilham a mesma conexão.
+
+As células do notebook são os trechos entre os marcadores "# %%" (veja gerar_notebook.py).
+"""
+
+# %% singleton
 import sqlite3
 from pathlib import Path
 
 ARQUIVO_BANCO = Path("projeto.db")
-existia_antes = ARQUIVO_BANCO.exists()
 
 
 class BancoSQLite:
+    """`BancoSQLite()` devolve sempre a mesma instância enquanto a conexão estiver aberta."""
+
     _instancia = None
 
     def __new__(cls, arquivo=ARQUIVO_BANCO):
@@ -14,6 +22,7 @@ class BancoSQLite:
             banco.arquivo = Path(arquivo)
             banco.conexao = sqlite3.connect(banco.arquivo)
             banco.conexao.row_factory = sqlite3.Row
+            # No SQLite as chaves estrangeiras vêm desligadas: é preciso ligar em toda conexão.
             banco.conexao.execute("PRAGMA foreign_keys = ON")
             cls._instancia = banco
         return cls._instancia
@@ -21,6 +30,3 @@ class BancoSQLite:
     def fechar(self):
         self.conexao.close()
         type(self)._instancia = None
-
-banco = BancoSQLite()
-conexao = banco.conexao
