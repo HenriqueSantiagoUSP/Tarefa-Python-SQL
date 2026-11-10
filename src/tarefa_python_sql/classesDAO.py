@@ -172,7 +172,10 @@ class GadgetDAO:
         cursor = self.conexao.execute(sql, (id,))
         self.conexao.commit()
         return cursor.rowcount
+<<<<<<< HEAD
     
+=======
+>>>>>>> 559d262ea95ffe114bc146cd217359e0bcb5a2d2
 class SensorDAO:
     def __init__(self):
         self.conexao = BancoSQLite().conexao
