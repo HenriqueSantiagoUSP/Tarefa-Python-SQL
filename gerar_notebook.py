@@ -8,6 +8,7 @@ marcador, ficam de fora), então o notebook e os .py nunca divergem. Os textos e
     uv run jupyter nbconvert --to notebook --execute --inplace Python_SQL_1682224_16872729_5797753.ipynb
 """
 
+import base64
 import re
 from pathlib import Path
 
@@ -31,21 +32,9 @@ for modulo in ("Singleton", "SQLs", "classes", "classesDAO", "gerador_dados", "d
         assert nome not in CODIGO, f"trecho repetido: {nome}"
         CODIGO[nome] = corpo
 
-DIAGRAMA = """```mermaid
-erDiagram
-    ILPI ||--o{ QUARTO : tem
-    ILPI ||--o{ CUIDADOR : emprega
-    QUARTO ||--o{ SENSOR : tem
-    SENSOR ||--o{ EVENTO_SENSOR : registra
-    QUARTO |o--o{ IDOSO : "quarto atual"
-    IDOSO |o--o| GADGET : usa
-    IDOSO ||--o{ HISTORICO_QUARTO : "morou em"
-    QUARTO ||--o{ HISTORICO_QUARTO : recebeu
-    QUARTO ||--o{ ALERTA : gera
-    IDOSO |o--o{ ALERTA : envolve
-    GADGET |o--o{ ALERTA : origina
-    CUIDADOR |o--o{ ALERTA : atende
-```"""
+# Imagens embutidas no próprio .ipynb (anexo da célula de texto, em base64): o notebook não depende do arquivo.
+ANEXOS = {"diagrama_er.png": RAIZ / "diagrama_entidades-Entidade Relacional.drawio.png"}
+DIAGRAMA = "![Diagrama entidade-relacionamento](attachment:diagrama_er.png)"
 
 CELULAS = [
     ("md", """# Python orientado a objetos e SQL com SQLite: banco do monitoramento de idosos
@@ -251,7 +240,12 @@ def main():
     usados = set()
     for tipo, conteudo in CELULAS:
         if tipo == "md":
-            nb.cells.append(nbformat.v4.new_markdown_cell(conteudo))
+            anexos = {nome: {"image/png": base64.b64encode(caminho.read_bytes()).decode("ascii")}
+                      for nome, caminho in ANEXOS.items() if f"attachment:{nome}" in conteudo}
+            celula = nbformat.v4.new_markdown_cell(conteudo)
+            if anexos:
+                celula["attachments"] = anexos
+            nb.cells.append(celula)
         elif conteudo in CODIGO:
             nb.cells.append(nbformat.v4.new_code_cell(CODIGO[conteudo]))
             usados.add(conteudo)

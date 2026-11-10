@@ -22,6 +22,9 @@ O código fica em `src/tarefa_python_sql/`:
 O notebook é **gerado** a partir desses módulos por `gerar_notebook.py`. Cada trecho `# %% <nome>` de um
 módulo vira uma célula, e os textos ficam no gerador, então o notebook e os `.py` não divergem.
 
+O diagrama `diagrama_entidades-Entidade Relacional.drawio.png` vai **dentro** do `.ipynb`, como anexo da
+célula de texto (base64), e o notebook não depende do arquivo. Se o PNG mudar, gere o notebook de novo.
+
 Para mudar o código, edite o `.py` e gere o notebook de novo. Com o `uv`, na raiz:
 
 ```bash
