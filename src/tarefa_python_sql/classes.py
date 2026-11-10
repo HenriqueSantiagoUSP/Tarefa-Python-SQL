@@ -5,11 +5,11 @@ class Idoso:
         self.id = id
         self.nome = nome
         self.idade = idade
-        self.quarto = quarto
+        self.num_quarto = quarto
 
 class Quarto:
     def __init(self, quarto : int, numero_de_camas : int, largura : float, comprimento:float ):
-        self.quarto = quarto
+        self.num_quarto = quarto
         self.numero_de_camas = numero_de_camas
         self.largura = largura
         self.comprimento = comprimento
@@ -24,5 +24,5 @@ class HistoricoSensor:
         self.temperatura = f"{temperatura:.1f}"
         self.status_da_porta= status_da_porta
         self.presenca = presenca
-        self.quarto = quarto
+        self.num_quarto = quarto
         self.data = data
