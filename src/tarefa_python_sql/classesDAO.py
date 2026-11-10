@@ -1,3 +1,49 @@
+from .Singleton import conexao
+from .classes import *  
+
+class ILPDAO:
+    def __init__(self):
+        self.conexao = conexao
+
+    def inserir(self, ilp: ILP):
+        sql = """
+        INSERT INTO ilp (id_ilp, nome, endereco)
+        VALUES (?, ?, ?)
+        """
+        valores = (ilp.id_ilp, ilp.nome, ilp.endereco)
+        self.conexao.execute(sql, valores)
+        self.conexao.commit()
+
+    def buscar_por_id(self, id_ilp: int):
+        sql = "SELECT * FROM ilp WHERE id_ilp = ?"
+        linha = self.conexao.execute(sql, (id_ilp,)).fetchone()
+        if linha is None:
+            return None
+        return ILP(linha["id_ilp"], linha["nome"], linha["endereco"])
+
+    def buscar_por_nome(self, nome: str):
+        sql = "SELECT * FROM ilp WHERE nome = ?"
+        linha = self.conexao.execute(sql, (nome,)).fetchone()
+        if linha is None:
+            return None
+        return ILP(linha["id_ilp"], linha["nome"], linha["endereco"])
+
+    def atualizar(self, ilp: ILP):
+        sql = """
+        UPDATE ilp
+        SET nome = ?, endereco = ?
+        WHERE id_ilp = ?
+        """
+        valores = (ilp.id_ilp, ilp.nome, ilp.endereco)
+        cursor = self.conexao.execute(sql, valores)
+        self.conexao.commit()
+        return cursor.rowcount
+
+    def excluir(self, id_ilp: int):
+        sql = "DELETE FROM ilp WHERE id_ilp = ?"
+        cursor = self.conexao.execute(sql, (id_ilp,))
+        self.conexao.commit()
+        return cursor.rowcount
 
 class IdosoDAO:
     def __init__(self):
