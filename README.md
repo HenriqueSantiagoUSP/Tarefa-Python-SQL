@@ -24,6 +24,11 @@ módulo vira uma célula, e os textos ficam no gerador, então o notebook e os `
 
 O diagrama `diagrama_entidades-Entidade Relacional.drawio.png` vai **dentro** do `.ipynb`, como anexo da
 célula de texto (base64), e o notebook não depende do arquivo. Se o PNG mudar, gere o notebook de novo.
+- O gerador reduz a cópia embutida para 960 px de largura (`LARGURA_DIAGRAMA_PX` em `gerar_notebook.py`). O
+  PNG original não muda.
+- A redução usa o Pillow, que está só no grupo `dev` do `pyproject`: o notebook não precisa dele.
+- Ao editar a célula (duplo clique), aparece o texto `![...](attachment:...)`. Rode a célula (Shift+Enter) e a
+  imagem volta.
 
 Para mudar o código, edite o `.py` e gere o notebook de novo. Com o `uv`, na raiz:
 

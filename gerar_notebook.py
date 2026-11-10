@@ -33,8 +33,27 @@ for modulo in ("Singleton", "SQLs", "classes", "classesDAO", "gerador_dados", "d
         CODIGO[nome] = corpo
 
 # Imagens embutidas no próprio .ipynb (anexo da célula de texto, em base64): o notebook não depende do arquivo.
+# A sintaxe ![](attachment:...) funciona no Jupyter, no VS Code, no Colab e no nbconvert; um <img width=...> com
+# anexo, não em todos. Por isso o tamanho na tela se ajusta reduzindo a própria imagem (LARGURA_DIAGRAMA_PX).
 ANEXOS = {"diagrama_er.png": RAIZ / "diagrama_entidades-Entidade Relacional.drawio.png"}
-DIAGRAMA = "![Diagrama entidade-relacionamento](attachment:diagrama_er.png)"
+LARGURA_DIAGRAMA_PX = 700
+# Centralizada: as linhas em branco em volta fazem o Markdown de dentro do <div> ser interpretado.
+DIAGRAMA = '<div align="center">\n\n![Diagrama entidade-relacionamento](attachment:diagrama_er.png)\n\n</div>'
+
+
+def png_reduzido(caminho: Path, largura: int) -> bytes:
+    """O PNG com no máximo `largura` pixels de largura (Lanczos), sem mexer no arquivo original."""
+    from io import BytesIO
+
+    from PIL import Image                    # grupo dev do pyproject (uv add --dev pillow)
+
+    imagem = Image.open(caminho)
+    if imagem.width > largura:
+        altura = round(imagem.height * largura / imagem.width)
+        imagem = imagem.resize((largura, altura), Image.Resampling.LANCZOS)
+    saida = BytesIO()
+    imagem.save(saida, format="PNG", optimize=True)
+    return saida.getvalue()
 
 CELULAS = [
     ("md", """# Python orientado a objetos e SQL com SQLite: banco do monitoramento de idosos
@@ -240,7 +259,7 @@ def main():
     usados = set()
     for tipo, conteudo in CELULAS:
         if tipo == "md":
-            anexos = {nome: {"image/png": base64.b64encode(caminho.read_bytes()).decode("ascii")}
+            anexos = {nome: {"image/png": base64.b64encode(png_reduzido(caminho, LARGURA_DIAGRAMA_PX)).decode("ascii")}
                       for nome, caminho in ANEXOS.items() if f"attachment:{nome}" in conteudo}
             celula = nbformat.v4.new_markdown_cell(conteudo)
             if anexos:
