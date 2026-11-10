@@ -24,20 +24,3 @@ class BancoSQLite:
 
 banco = BancoSQLite()
 conexao = banco.conexao
-
-
-if __name__ == "__main__":
-
-    sql = "SELECT sqlite_version() AS versao, 2 + 2 AS resultado"
-    resultado = conexao.execute(sql).fetchone()
-
-    print("Arquivo já existia?", existia_antes)
-    print("Arquivo existe agora?", ARQUIVO_BANCO.exists())
-    print("SQLite:", resultado["versao"])
-    print("Consulta de teste:", resultado["resultado"])
-    print("Mesma conexão?", conexao is BancoSQLite().conexao)
-
-    assert ARQUIVO_BANCO.exists()
-    assert resultado["resultado"] == 4
-    assert banco is BancoSQLite()
-    assert conexao is BancoSQLite().conexao

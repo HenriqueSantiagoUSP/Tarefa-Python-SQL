@@ -10,6 +10,13 @@ class ILP:
     def id_ilp(self) -> int:
         return self.__id_ilp
 
+    def to_dict(self) -> dict:
+        return {
+            "id_ilp": self.id_ilp,
+            "nome": self.nome,
+            "endereco": self.endereco,
+        }
+
 class Cuidador:
     def __init__(self, id_cuidador : int, id_ilp : int, nome : str, telegram_id : str):
         self.__id_cuidador = id_cuidador
@@ -21,6 +28,14 @@ class Cuidador:
     def id_cuidador(self) -> int:
         return self.__id_cuidador
 
+    def to_dict(self) -> dict:
+        return {
+            "id_cuidador": self.id_cuidador,
+            "id_ilp": self.id_ilp,
+            "nome": self.nome,
+            "telegram_id": self.telegram_id,
+        }
+
 class Quarto:
     def __init__(self, id_quarto : int, id_ilp : int):
         self.__id_quarto = id_quarto
@@ -29,6 +44,12 @@ class Quarto:
     @property
     def id_quarto(self) -> int:
         return self.__id_quarto
+
+    def to_dict(self) -> dict:
+        return {
+            "id_quarto": self.id_quarto,
+            "id_ilp": self.id_ilp,
+        }
 
 class Idoso:  
     def __init__(self, id_idoso : int, nome: str, data_nascimento : datetime.date, id_quarto : int ):
@@ -41,6 +62,14 @@ class Idoso:
     def id_idoso(self) -> int:
         return self.__id_idoso
 
+    def to_dict(self) -> dict:
+        return {
+            "id_idoso": self.id_idoso,
+            "nome": self.nome,
+            "data_nascimento": self.data_nascimento,
+            "id_quarto": self.id_quarto,
+        }
+
 class Gadget:
     def __init__(self, id_gadget : str, id_idoso : int):
         self.__id_gadget = id_gadget
@@ -49,6 +78,12 @@ class Gadget:
     @property
     def id_gadget(self) -> str:
         return self.__id_gadget
+
+    def to_dict(self) -> dict:
+        return {
+            "id_gadget": self.id_gadget,
+            "id_idoso": self.id_idoso,
+        }
 
 class Sensor:
     def __init__(self, id_sensor : int, tipo : str, id_quarto : int, lugar : str):
@@ -60,6 +95,14 @@ class Sensor:
     @property
     def id_sensor(self) -> int:
         return self.__id_sensor
+
+    def to_dict(self) -> dict:
+        return {
+            "id_sensor": self.id_sensor,
+            "tipo": self.tipo,
+            "id_quarto": self.id_quarto,
+            "lugar": self.lugar,
+        }
 
 class EventoSensor:
     def __init__(self, id_evento : int, id_sensor : int, timestamp : datetime.date, estado = "NULL", valor = "NULL"):
@@ -73,6 +116,15 @@ class EventoSensor:
     def id_evento(self) -> int:
         return self.id_evento
 
+    def to_dict(self) -> dict:
+        return {
+            "id_evento": self.id_evento,
+            "id_sensor": self.id_sensor,
+            "timestamp": self.timestamp,
+            "estado": self.estado,
+            "valor": self.valor,
+        }
+
 class HistoricoQuarto:
     def __init__(self, id_registro : int, id_idoso : int, id_quarto : int, tipo : str, data : datetime.date):
         self.__id_registro = id_registro
@@ -84,6 +136,15 @@ class HistoricoQuarto:
     @property
     def id_registro(self) -> int:
         return self.__id_registro
+
+    def to_dict(self) -> dict:
+        return {
+            "id_registro": self.id_registro,
+            "id_idoso": self.id_idoso,
+            "id_quarto": self.id_quarto,
+            "tipo": self.tipo,
+            "data": self.data,
+        }
 
 class Alerta:
     def __init__(self, id_alerta : int, id_mqtt : str, tipo : str, timestamp : datetime.date, id_quarto : int, id_idoso : int, id_gadget : str):
@@ -98,4 +159,15 @@ class Alerta:
     @property
     def id_alerta(self) -> int:
         return self.__id_alerta
+
+    def to_dict(self) -> dict:
+        return {
+            "id_alerta": self.id_alerta,
+            "id_mqtt": self.id_mqtt,
+            "tipo": self.tipo,
+            "timestamp": self.timestamp,
+            "id_quarto": self.id_quarto,
+            "id_idoso": self.id_idoso,
+            "id_gadget": self.id_gadget,
+        }
     
