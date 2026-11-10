@@ -1,35 +1,35 @@
 from datetime import datetime
-
-class ILP:
-    def __init__(self, id_ilp : int, nome : str, endereco : str):
-        self.__id_ilp = id_ilp
+#ja tem DAo
+class ILPI:
+    def __init__(self, id_ilpi : int, nome : str, endereco : str):
+        self.__id_ilpi = id_ilpi
         self.nome = nome
         self.endereco = endereco
 
     @property
-    def id_ilp(self) -> int:
-        return self.__id_ilp
-
+    def id_ilpi(self) -> int:
+        return self.__id_ilpi
+#ja tem DAO
 class Cuidador:
-    def __init__(self, id_cuidador : int, id_ilp : int, nome : str, telegram_id : str):
+    def __init__(self, id_cuidador : int, id_ilpi : int, nome : str, telegram_id : str):
         self.__id_cuidador = id_cuidador
-        self.id_ilp = id_ilp
+        self.id_ilpi = id_ilpi
         self.nome = nome
         self.telegram_id = telegram_id
 
     @property
     def id_cuidador(self) -> int:
         return self.__id_cuidador
-
+#ja tem DAO
 class Quarto:
-    def __init__(self, id_quarto : int, id_ilp : int):
+    def __init__(self, id_quarto : int, id_ilpi : int):
         self.__id_quarto = id_quarto
-        self.id_ilp = id_ilp
+        self.id_ilpi = id_ilpi
 
     @property
     def id_quarto(self) -> int:
         return self.__id_quarto
-
+#ja tem DAO
 class Idoso:  
     def __init__(self, id_idoso : int, nome: str, data_nascimento : datetime.date, id_quarto : int ):
         self.__id_idoso = id_idoso
@@ -40,7 +40,7 @@ class Idoso:
     @property
     def id_idoso(self) -> int:
         return self.__id_idoso
-
+#ja tem DAO
 class Gadget:
     def __init__(self, id_gadget : str, id_idoso : int):
         self.__id_gadget = id_gadget
@@ -49,7 +49,7 @@ class Gadget:
     @property
     def id_gadget(self) -> str:
         return self.__id_gadget
-
+#ja tem DAO
 class Sensor:
     def __init__(self, id_sensor : int, tipo : str, id_quarto : int, lugar : str):
         self.__id_sensor = id_sensor
@@ -72,7 +72,7 @@ class EventoSensor:
     @property
     def id_evento(self) -> int:
         return self.id_evento
-
+# ja tem DAO
 class HistoricoQuarto:
     def __init__(self, id_registro : int, id_idoso : int, id_quarto : int, tipo : str, data : datetime.date):
         self.__id_registro = id_registro
