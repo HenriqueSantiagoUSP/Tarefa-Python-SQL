@@ -75,7 +75,10 @@ Banco do projeto integrativo do grupo, que monitora idosos em ILPIs:
 | Demonstração do CRUD | seção 6 |
 | Consultas com JOIN (6 consultas) | seção 7 |
 
-O notebook roda do início ao fim sem arquivos externos e cria o próprio `projeto.db`."""),
+O notebook roda do início ao fim sem arquivos externos e cria o próprio `projeto.db`.
+
+> **Google Colab (nuvem):** o Faker não vem instalado. A primeira célula da seção 5 o instala com
+> `%pip install Faker`, o que exige internet. Localmente, instale antes com `pip install Faker`."""),
     ("md", "## Modelo entidade-relacionamento\n\n" + DIAGRAMA + """
 
 | Tabela | Chave primária | Chaves estrangeiras |
@@ -132,7 +135,10 @@ Os dados são gerados com semente fixa e respeitam os relacionamentos:
 - capacidade dos quartos;
 - uma pulseira por idoso;
 - cada alerta no quarto do idoso;
-- o cuidador da mesma ILPI."""),
+- o cuidador da mesma ILPI.
+
+> **Google Colab:** rode a célula abaixo antes das demais. Ela instala o Faker (`%pip install Faker`) se ele
+> ainda não estiver instalado, e precisa de internet."""),
     ("py", "try:\n    import faker\nexcept ImportError:      # no Colab é preciso instalar\n    %pip -q install Faker"),
     ("py", "gerador"),
     ("py", "gerar"),
