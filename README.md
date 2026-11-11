@@ -17,14 +17,14 @@ O código fica em `src/tarefa_python_sql/`:
 | `classes.py` | as entidades e as conversões de data e hora |
 | `classesDAO.py` | um DAO por tabela: CRUD em SQL parametrizado e as consultas com JOIN |
 | `gerador_dados.py` | dados fictícios coerentes (Faker e `random` com semente fixa) |
-| `demonstracao.py` | o roteiro inteiro: tabelas, dados, CRUD, injection, integridade, JOINs e persistência |
+| `demonstracao.py` | o roteiro inteiro: tabelas, dados, CRUD, JOINs e persistência |
 
 O notebook é **gerado** a partir desses módulos por `gerar_notebook.py`. Cada trecho `# %% <nome>` de um
 módulo vira uma célula, e os textos ficam no gerador, então o notebook e os `.py` não divergem.
 
 O diagrama `diagrama_entidades-Entidade Relacional.drawio.png` vai **dentro** do `.ipynb`, como anexo da
 célula de texto (base64), e o notebook não depende do arquivo. Se o PNG mudar, gere o notebook de novo.
-- O gerador reduz a cópia embutida para 960 px de largura (`LARGURA_DIAGRAMA_PX` em `gerar_notebook.py`). O
+- O gerador reduz a cópia embutida à largura de `LARGURA_DIAGRAMA_PX`, em `gerar_notebook.py`. O
   PNG original não muda.
 - A redução usa o Pillow, que está só no grupo `dev` do `pyproject`: o notebook não precisa dele.
 - Ao editar a célula (duplo clique), aparece o texto `![...](attachment:...)`. Rode a célula (Shift+Enter) e a

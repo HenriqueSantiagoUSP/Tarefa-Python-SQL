@@ -20,7 +20,7 @@ class DAO:
 
     def _inserir_e_obter_id(self, sql, valores):
         """Executa um INSERT ... RETURNING, confirma e devolve o id gerado pelo banco."""
-        linhas = self.conexao.execute(sql, valores).fetchall()   # termina o comando antes do commit
+        linhas = self.conexao.execute(sql, valores).fetchall()
         self.conexao.commit()
         return linhas[0][0]
 
@@ -94,7 +94,7 @@ class QuartoDAO(DAO):
         return None if linha is None else self._da_linha(linha)
 
     def buscar_por_topico(self, site: str, codigo: str):
-        """JOIN: acha o quarto pelo tópico MQTT idoso/<site>/<codigo>, como faria o gravador da central."""
+        """JOIN: acha o quarto pelo tópico MQTT idoso/<site>/<codigo>."""
         sql = """
         SELECT q.*
         FROM quarto AS q
@@ -177,10 +177,7 @@ class EventoSensorDAO(DAO):
         return evento.id_evento
 
     def inserir_varios(self, eventos) -> int:
-        """
-        Grava muitos eventos de uma vez (executemany) com um só commit: bem mais rápido que um commit por linha.
-        Sem RETURNING, os objetos ficam sem id; quem precisar do id usa inserir().
-        """
+        """Grava muitos eventos de uma vez (executemany, um só commit)."""
         sql = """
         INSERT INTO evento_sensor (id_sensor, ocorrido_em, estado, valor)
         VALUES (?, ?, ?, ?)
@@ -282,10 +279,7 @@ class IdosoDAO(DAO):
         return self._alterar("DELETE FROM idoso WHERE id_idoso = ?", (id_idoso,))
 
     def transferir(self, idoso: Idoso, quarto_novo: Quarto, dia):
-        """
-        Muda o idoso de quarto. São três comandos que só fazem sentido juntos, então rodam numa transação:
-        se um falhar, nenhum vale (ROLLBACK).
-        """
+        """Muda o idoso de quarto: fecha o período atual, abre outro e atualiza o idoso, numa transação."""
         sql_ocupantes = "SELECT COUNT(*) FROM idoso WHERE id_quarto = ?"
         ocupantes = self.conexao.execute(sql_ocupantes, (quarto_novo.id_quarto,)).fetchone()[0]
         if ocupantes >= quarto_novo.capacidade:
@@ -300,7 +294,7 @@ class IdosoDAO(DAO):
         VALUES (?, ?, ?)
         """
         sql_idoso = "UPDATE idoso SET id_quarto = ? WHERE id_idoso = ?"
-        with self.conexao:                 # BEGIN ... COMMIT (ou ROLLBACK se der erro)
+        with self.conexao:                 # transação: COMMIT, ou ROLLBACK se der erro
             self.conexao.execute(sql_fecha, (data_para_texto(dia), idoso.id_idoso))
             self.conexao.execute(sql_abre, (idoso.id_idoso, quarto_novo.id_quarto, data_para_texto(dia)))
             self.conexao.execute(sql_idoso, (quarto_novo.id_quarto, idoso.id_idoso))
@@ -366,7 +360,7 @@ class GadgetDAO(DAO):
         return Gadget(linha["id_gadget"], idoso)
 
     def inserir(self, gadget: Gadget) -> str:
-        """O id da pulseira vem do MAC, não do banco: aqui não precisa de RETURNING."""
+        """O id da pulseira é o MAC, então não usa RETURNING."""
         sql = """
         INSERT INTO gadget (id_gadget, id_idoso)
         VALUES (?, ?)
@@ -459,7 +453,7 @@ class AlertaDAO(DAO):
         VALUES (:id_mqtt, :tipo, :estado, :inicio, :fim, :id_quarto, :id_idoso, :id_gadget, :id_cuidador)
         RETURNING id_alerta
         """
-        valores = alerta.to_dict()         # parâmetros nomeados: as chaves do dicionário
+        valores = alerta.to_dict()         # parâmetros nomeados (:tipo, :inicio...)
         alerta._definir_id(self._inserir_e_obter_id(sql, valores))
         return alerta.id_alerta
 
@@ -509,10 +503,7 @@ class AlertaDAO(DAO):
         return [dict(linha) for linha in self.conexao.execute(sql).fetchall()]
 
     def ocupantes_no_alerta(self, id_alerta: int):
-        """
-        JOIN com o histórico: quem estava no quarto no dia do alerta. É por isso que o histórico guarda
-        períodos [data_entrada, data_saida): o quarto atual do idoso não diz onde ele estava antes.
-        """
+        """JOIN: quem estava no quarto no dia do alerta (pelo histórico de quartos)."""
         sql = """
         SELECT a.id_alerta, a.tipo, a.inicio, q.codigo AS quarto, i.id_idoso, i.nome AS idoso
         FROM alerta AS a

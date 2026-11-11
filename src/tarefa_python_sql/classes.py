@@ -184,7 +184,7 @@ class Idoso(Pessoa):
         return self._id
 
     def idade_em(self, dia: date) -> int:
-        """Idade calculada (não gravada no banco), como o 'aprovado' do exemplo da aula."""
+        """Idade calculada a partir da data de nascimento (não é gravada no banco)."""
         aniversario_ja_passou = (dia.month, dia.day) >= (self.data_nascimento.month, self.data_nascimento.day)
         return dia.year - self.data_nascimento.year - (0 if aniversario_ja_passou else 1)
 
@@ -215,7 +215,7 @@ class Cuidador(Pessoa):
 
 # %% classes_vinculos
 class Gadget(Entidade):
-    """A pulseira. O id vem de fora (3 últimos bytes do MAC), então já nasce definido."""
+    """A pulseira. O id é o MAC (3 últimos bytes), então já nasce definido."""
 
     def __init__(self, id_gadget: str, idoso: Idoso | None = None):
         if len(id_gadget) != 6 or any(c not in "0123456789abcdef" for c in id_gadget):
